@@ -1,0 +1,34 @@
+@tailwind base;
+
+:root {
+  --color-bg-primary: royalblue;
+  --color-bg-secondary: blue;
+  --color-bg-default: #fff;
+  --color-bg-inverse: #fff;
+
+  --color-text-primary: #fff;
+  --color-text-secondary: #fff;
+  --color-text-default: #444;
+  --color-text-inverse: #444;
+}
+
+/*! purgecss start ignore */
+.theme-dark {
+  --color-bg-primary: orange;
+  --color-bg-secondary: darkorange;
+  --color-bg-default: #f4f4f4;
+  --color-bg-inverse: #373737;
+
+  --color-text-primary: #fff;
+  --color-text-secondary: #fff;
+  --color-text-default: #373737;
+  --color-text-inverse: #fff;
+}
+/*! purgecss end ignore */
+
+.bg-inverse {
+  background-color: var(--color-bg-inverse);
+}
+
+@tailwind components;
+@tailwind utilities;
