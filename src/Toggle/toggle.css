@@ -1,0 +1,21 @@
+.vuldin-toggle-container {
+  display: inline-grid;
+}
+
+.vuldin-toggle-input {
+  background-color: #333;
+}
+
+.vuldin-toggle-input + .vuldin-toggle-label {
+  justify-self: start;
+  background-color: #333;
+}
+
+.vuldin-toggle-input:checked {
+  background-color: #999;
+}
+
+.vuldin-toggle-input:checked + .vuldin-toggle-label {
+  justify-self: end;
+  background-color: #999;
+}
