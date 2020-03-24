@@ -4,9 +4,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: npm i
-    - name: debugbear on /
-      run: $(npm bin)/debugbear --pageId=6383 --waitForResult --baseBranch=master --inferBuildInfo
-      - with:
+      - uses: actions/checkout@v2
+      - run: npm i
+      - run: ./node_modules/.bin/debugbear --pageId=6383 --waitForResult --baseBranch=master --inferBuildInfo
+        env:
           DEBUGBEAR_API_KEY: ${{ secrets.DEBUGBEAR_API_KEY }}
