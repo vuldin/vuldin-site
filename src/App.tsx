@@ -1,10 +1,6 @@
 import React from "react";
-import { Toggle } from "./Toggle";
-import useDarkMode from "use-dark-mode";
 
 export function App() {
-  const darkMode = useDarkMode(true);
-
   return (
     <div className="container mx-auto">
       <div className="pt-4">
@@ -39,15 +35,6 @@ export function App() {
             <a href="https://github.com/orbitdb">https://github.com/orbitdb</a>
           </li>
         </ol>
-      </div>
-      <div className="pt-4">
-        <button type="button" onClick={darkMode.disable}>
-          light
-        </button>
-        <Toggle checked={darkMode.value} onChange={darkMode.toggle} />
-        <button type="button" onClick={darkMode.enable}>
-          dark
-        </button>
       </div>
     </div>
   );
