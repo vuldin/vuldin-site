@@ -1,24 +1,24 @@
 {
   "name": "vuldin-site",
   "private": true,
-  "scripts": {
-    "start": "parcel serve index.html",
-    "build": "cross-env NODE_ENV=production parcel build index.html",
-    "clean": "rimraf .parcel-cache dist",
-    "test": "jest"
-  },
   "author": "vuldin <hello@vuld.in>",
-  "devDependencies": {
-    "@babel/preset-typescript": "^7.10.4",
-    "@types/jest": "^25.2.3",
-    "cross-env": "^7.0.2",
-    "jest": "^25.5.4",
-    "parcel": "^2.0.0-beta.1",
-    "rimraf": "^3.0.2",
-    "tailwindcss": "^1.7.6",
-    "typescript": "^3.9.7"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuldin/vuldin-site.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vuldin/vuldin-site/issues"
+  },
+  "homepage": "https://github.com/vuldin/vuldin-site#readme",
+  "license": "ISC",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export",
+    "start": "next start"
   },
   "dependencies": {
+    "3box": "^1.21.0",
+    "next": "^9.5.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

@@ -1,3 +1,0 @@
-- favicon and touch icons: https://mathiasbynens.be/notes/touch-icons
-- test purgecss
-- break out theme handling into separate hook
