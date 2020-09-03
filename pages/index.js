@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { GlobalStateContext, GlobalDispatchContext } from "../context/global";
 
 export default function HomePage() {
+  const globalDispatch = React.useContext(GlobalDispatchContext);
+  const globalState = React.useContext(GlobalStateContext);
+
+  const active = globalState.value === "active";
+  const { count } = globalState.context;
+
   // TODO pull posts from db
   const posts = ["test"];
 
@@ -53,7 +60,17 @@ export default function HomePage() {
           ))}
         </li>
       </ul>
-      <Link href="/dashboard">dashboard</Link>
+      <Link href="/dashboard">
+        <a>dashboard</a>
+      </Link>
+      <div>
+        <button onClick={() => globalDispatch("TOGGLE")}>
+          Toggle {active ? "on" : "off"}
+        </button>{" "}
+        <code>
+          Clicked <strong>{count}</strong> times
+        </code>
+      </div>
     </>
   );
 }
