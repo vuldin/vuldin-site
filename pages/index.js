@@ -9,16 +9,19 @@ export default function HomePage() {
   const { count } = globalState.context;
 
   // TODO pull posts from db
-  const posts = ["test"];
+  const posts = ["test1", "test2"];
 
   return (
     <>
       <div className="container mx-auto">
         <div className="pt-4">
           <span>
-            Work in progress! This is just a placeholder while I mess with the
-            tools I'm using to make this site. Some of these tools are:
+            Welcome to my blog! I occasionally post about my interests,
+            projects, and plans for the future. Programming, computers, history,
+            politics, travel, family and more are all covered to some extent.
+            Use the filter to follow only those areas you are interested in.
           </span>
+          {/*
           <ol className="list-disc list-inside">
             <li>
               <span className="pr-2">nextjs</span>
@@ -48,17 +51,18 @@ export default function HomePage() {
               </a>
             </li>
           </ol>
+          */}
         </div>
       </div>
       <div>list of blog articles</div>
       <ul>
-        <li>
-          {posts.map((post, key) => (
-            <Link key={key} href="/[post]" as={`/${post}`}>
+        {posts.map((post, key) => (
+          <li key={key}>
+            <Link href="/[post]" as={`/${post}`}>
               <a>{post}</a>
             </Link>
-          ))}
-        </li>
+          </li>
+        ))}
       </ul>
       <Link href="/dashboard">
         <a>dashboard</a>

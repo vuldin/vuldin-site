@@ -1,5 +1,6 @@
 import { GlobalContextProvider } from "../context/global";
 import App from "next/app";
+import "../styles/index.css";
 
 class MyApp extends App {
   render() {

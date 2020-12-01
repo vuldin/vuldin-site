@@ -17,11 +17,15 @@
     "start": "next start"
   },
   "dependencies": {
-    "3box": "^1.21.0",
     "@xstate/react": "^0.8.1",
-    "next": "^9.5.2",
+    "next": "^10.0.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "xstate": "^4.13.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.0.4",
+    "postcss": "^8.1.10",
+    "tailwindcss": "^2.0.1"
   }
 }
