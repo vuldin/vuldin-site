@@ -5,9 +5,6 @@ export default function Dashboard() {
   const globalDispatch = React.useContext(GlobalDispatchContext);
   const globalState = React.useContext(GlobalStateContext);
 
-  const active = globalState.value === "active";
-  const { count } = globalState.context;
-
   return (
     <>
       <div>dashboard</div>
@@ -16,11 +13,8 @@ export default function Dashboard() {
       </Link>
       <div>
         <button onClick={() => globalDispatch("TOGGLE")}>
-          Toggle {active ? "on" : "off"}
-        </button>{" "}
-        <code>
-          Clicked <strong>{count}</strong> times
-        </code>
+          Toggle {globalState.value}
+        </button>
       </div>
     </>
   );
