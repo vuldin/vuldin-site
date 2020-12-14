@@ -54,11 +54,10 @@ export const GlobalContextProvider = ({ children }) => {
   }, []);
 
   try {
+    // on client
     const htmlClass = document.querySelector("html").className;
-    // console.log("on client, setting theme to", htmlClass.length > 0 ? "dark" : "light");
 
     const persistedState = themeMachine.initialState;
-    //console.log("initialState", persistedState);
 
     const [state, send] = useMachine(themeMachine, {
       state: {
@@ -78,10 +77,11 @@ export const GlobalContextProvider = ({ children }) => {
     if (mounted) {
       return <div>{body}</div>;
     } else {
+      // avoid failure to render due to mismatching content between server/client
       return <div className="invisible">{body}</div>;
     }
   } catch (e) {
-    // console.log("on server");
+    // on server
     const [state, send] = useMachine(themeMachine);
 
     const body = (

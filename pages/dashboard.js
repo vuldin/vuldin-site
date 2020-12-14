@@ -1,9 +1,10 @@
+import { useContext } from "react";
 import Link from "next/link";
 import { GlobalStateContext, GlobalDispatchContext } from "../context/global";
 
 export default function Dashboard() {
-  const globalDispatch = React.useContext(GlobalDispatchContext);
-  const globalState = React.useContext(GlobalStateContext);
+  const globalDispatch = useContext(GlobalDispatchContext);
+  const globalState = useContext(GlobalStateContext);
 
   return (
     <>

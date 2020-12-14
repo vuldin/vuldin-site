@@ -1,21 +1,21 @@
 import Link from "next/link";
-import { useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalStateContext, GlobalDispatchContext } from "../context/global";
 
 export default function HomePage() {
-  const globalDispatch = React.useContext(GlobalDispatchContext);
-  const globalState = React.useContext(GlobalStateContext);
+  const globalDispatch = useContext(GlobalDispatchContext);
+  const globalState = useContext(GlobalStateContext);
 
-  /*
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    console.log("rendered index, state machine value", globalState.value);
-  }, [globalState.value]);
-  */
+    setMounted(true);
+  }, []);
 
   // TODO pull posts from db
   const posts = ["test1", "test2"];
 
-  return (
+  const content = (
     <>
       <div className="container mx-auto">
         <div className="pt-4">
@@ -78,4 +78,10 @@ export default function HomePage() {
       </div>
     </>
   );
+
+  if (!mounted) {
+    return <div className="invisible">{content}</div>;
+  } else {
+    return <div>{content}</div>;
+  }
 }
