@@ -1,0 +1,81 @@
+---
+import { getCollection } from "astro:content";
+import Container from "@components/Container.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import Link from "@components/Link.astro";
+import { SITE, HOME, SOCIALS } from "@consts";
+
+const blog = (await getCollection("blog"))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0,SITE.NUM_POSTS_ON_HOMEPAGE);
+
+---
+
+<PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <Container>
+    <h4 class="animate font-semibold text-black dark:text-white">
+      Hey, I'm Josh
+    </h4>
+    <div class="space-y-16">
+      <section>
+        <article class="space-y-4">
+          <p class="animate">
+            I'm a solutions engineer at
+            <Link href="https://redpanda.com" external>
+              Redpanda
+            </Link>,
+            where I work on streaming data infrastructure, migration tooling, and customer enablement. Most of my day involves Redpanda clusters, Kubernetes, Terraform, and helping teams move their data pipelines.
+          </p>
+          <p class="animate">
+            Outside of work I build AI tooling. My main project right now is
+            <Link href="https://github.com/vuldin/yapa" external>
+              YAPA
+            </Link>,
+            an MCP-based memory assistant that gives AI agents shared, persistent context using ChromaDB and PostgreSQL. I'm interested in how agents can share knowledge without needing to talk to each other directly.
+          </p>
+          <p class="animate">
+            I also tinker with local RAG setups, LLM interfaces, and whatever else catches my attention. Most of it ends up on
+            <Link href="https://github.com/vuldin" external>
+              GitHub
+            </Link>.
+          </p>
+        </article>
+      </section>
+
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">
+            Latest posts
+          </h5>
+          <Link href="/blog">
+            See all posts
+          </Link>
+        </div>
+        <ul class="flex flex-col gap-4">
+          {blog.map(post => (
+            <li>
+              <ArrowCard entry={post} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="animate space-y-4">
+        <h5 class="font-semibold text-black dark:text-white">
+          Find me online
+        </h5>
+        <ul class="flex flex-wrap gap-2">
+          {SOCIALS.map(SOCIAL => (
+            <li class="flex gap-x-2 text-nowrap">
+              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
+                {SOCIAL.NAME}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </Container>
+</PageLayout>
