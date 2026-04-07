@@ -12,7 +12,7 @@ Agentic tools like OpenClaw and Hermes are awesome because they enable agent orc
 
 To me it seems like most people are referring to use case 1 when they discuss agent orchestration, but I see both use cases being discussed. The issue is the technology you need to handle each use case is very different. And even if you do have multiple humans and computers in the loop, many humans will still want to have a local-first solution that doesn't rely on always being connected to a shared database and being online.
 
-Regardless of the use case though, the requirement is the same: agents need to share context. The thing is that many popular tools today go about sharing context between agents in a very human-centric way. These tools create systems for agents to communicate directly with each other, referred to this as agent-to-agent (A2A) communication. I'll be comparing A2A to another approach for sharing context, called agent-to-database (A2D), and make the argument that this latter approach is better for many use cases (and I'll give a few examples). With A2D, agents will no longer need to know about every other agent and how to send messages to them; instead agents automatically have shared context, and they automatically add to and query for any updates as they go on about their work.
+Regardless of the use case though, the requirement is the same: agents need to share context. The thing is that many popular tools today go about sharing context between agents in a very human-centric way. These tools create systems for agents to communicate directly with each other, referred to as agent-to-agent (A2A) communication. I'll be comparing A2A to another approach for sharing context, called agent-to-database (A2D), and make the argument that this latter approach is better for many use cases (and I'll give a few examples). With A2D, agents will no longer need to know about every other agent and how to send messages to them; instead agents automatically have shared context, and they automatically add to and query for any updates as they go on about their work.
 
 ## A2A communication
 
@@ -86,29 +86,31 @@ Let's take a step back and look at what these projects are either building or pl
 | **Resilience** | Circuit breakers, retry with backoff, idempotency keys, push notification webhooks with signal-decay, soft concurrency limiting |
 | **Security** | OAuth2, OIDC, mTLS, Ed25519 device identity, bearer tokens with zero-downtime rotation, SSRF protection |
 
-All of this exists to solve one problem: sharing context between agents. Agent A knows something, and agent B needs it. So these tools are building infrastructure to connect these. But with these tools, add more agents means more complexity that each agent must navigate. Each agent must know about all other agents, determine the level of trust, know how to communicate with them, learn about their capabilities, etc. This is additional context unrelated to the actual project you are working on, or the original problem you are trying to solve. These tools can do a good job at hiding this complexity, but your agents must interact with these complicated layers each time during communication and the other agent must be active.
+All of this exists to solve one problem: sharing context between agents. Agent A knows something, and agent B needs it. So these tools are building infrastructure to connect these agents. But with more agents means there is more complexity that each agent must navigate. Agents must know about all other agents, determine the level of trust, know how to communicate with them, learn about their capabilities, etc. This is additional context that is unrelated to the actual project you are working on. These tools can do a good job at hiding this complexity and your agent only loads these details into context when they need to. But your agents must interact with these complicated layers on an ongoing basis and the other agents must be active at the same time.
 
 ## Repeating mistakes from the past
 
 Why does any agent need to know everything about every other agent you, or your organization, are using? Each of us may have a handful of agents, so the problem may not get too unwieldly as long as we are always focused on use case 1. But increasingly we want to interact with agents from other people, all working on shared projects. In that case it can get complicated to connect all agents together directly.
 
-A2A seems like the wrong approach from a general architecture standpoint for most use cases... and it reminds me of why Kafka was invented. Before Kafka you had lots of point-to-point integrations where every app had a direct connection to the other apps. The number of connections needed in a system multipled by the number overall apps in the system each time you had to add in another app. This was brittle and error-prone as the apps changed over time.
+A2A seems like the wrong approach from a general architecture standpoint for most use cases... and it reminds me of why Kafka was invented. Before Kafka you had lots of point-to-point integrations where every app had a direct connection to the other apps. The number of connections needed in a system multiplied by the number overall apps in the system each time you had to add in another app. This was brittle and error-prone as the apps changed over time.
 
-A2A is pre-kafka, and A2B is the Kafka-like pattern. This means Agent A stores what it learned and then any other agent can just query for what it needs. Agents never need to directly interact with each other... they may not even run at the same time. Agents no longer need to care about all other agents, so no discovery is needed. Rather than asking various agents (potentially multiple times) about what the status is or who knows what, agents can just ask "what do we know about X?". We no longer need a complicated message schema because agents store data in their context as it makes sense to them, and then any agent can then use natural language to query the data. A transport protocal is no longer needed as shared context is just a database read. New agents can be added in at any time, and they have all the access to historic context.
+A2A is similar to this pre-kafka approach, and A2D applies something similar to the Kafka pattern to agentic communication. This means Agent A stores what it learned and then any other agent can just query for what it needs. Agents never need to directly interact with each other... they may not even run at the same time. Agents no longer need to care about all other agents, so no discovery is needed. Rather than asking various agents about what the status is or who knows what, agents can just ask "what do we know about X?". We no longer need a complicated message schema because agents store data in their context as it makes sense to them, and any agent can then use natural language to query the data. A transport protocol is no longer needed as shared context is just a database read. New agents can be added in at any time, and they have all the access to historical context.
 
 YAPA is yet another personal assistant that implements this A2D approach.
 
-## A2B: How YAPA works
+## A2D: How YAPA works
 
-YAPA is an MCP server that gives AI agents persistent, shared memory. It runs alongside Claude Code, OpenCode, or any other MCP-compatible agentic tool. As you work it watches for useful context and stores it, and before the agent responds to any prompt it queries memory for anything relevant. The local database is a fast vector database that is perfect for the types of queries agents make for context as they work.
+YAPA is an MCP server that gives AI agents persistent, shared memory. This MCP server runs alongside Claude Code, OpenCode, or any other MCP-compatible agentic tool. As you work it watches for useful context and stores it, then before the agent responds to any prompt it queries memory for anything relevant. The local database is a fast vector database that is perfect for the types of queries agents make for context as they work.
 
 There's no A2A communication in YAPA, and there's also no protocol, message format, or routing. There's just a shared knowledge layer.
 
 ### Storage: vector embeddings, not messages
 
-Every memory is stored as a vector embedding in ChromaDB. Search is semantic, so asking about "Company A's DR strategy" finds memories related to that company's DR strategy even if those words never appeared in the original memory. Long content gets chunked into 2000-character segments with a 200-character overlap, and each segment is independently searchable. This matters because the retrieval problem is fundamentally different from the communication problem.
+Every memory is stored as a vector embedding in ChromaDB. Search is semantic, so asking about "Company A's DR strategy" finds memories related to that company's DR strategy even if those words never appeared in the original memory. Long content gets chunked into 2000-character segments with a 200-character overlap, and each segment is independently searchable.
 
-With A2A communication, you need to know exactly which agent has the information and you must ask them for it. With semantic search over A2B, you describe what you need and the relevant knowledge is found. You don't have to know or care about who has provided the solution or created the memory, it's just available in the shared context and available as you and your agents work.
+This matters because the retrieval problem is fundamentally different from the communication problem. Communication is a routing problem: you need to know where something is and how to get it there. Retrieval is a relevance problem: you need to figure out what matters even when you don't know exactly how to ask for it.
+
+With A2A, Agent A must know that Agent B has the answer, formulate a precise request, and hope Agent B is online to respond. If Agent B misunderstands the request or returns the wrong information or is offline, the whole chain fails. With A2D, Agent A stores what it knows in a format optimized for discovery. Agent B doesn't need to know anything about Agent A -- it just describes what it needs and semantic search surfaces the most relevant context from any agent. The retrieval problem demands handling ambiguous queries, ranking relevance across multiple sources, and synthesizing partial matches into coherent answers. These are hard problems that don't map onto the "send message and wait for reply" model of A2A.
 
 ### Organization: collections, not addresses
 
@@ -176,7 +178,7 @@ I'm not arguing that agent-to-agent communication is never useful. There are rea
 - **Cross-organizational interaction** where a shared database isn't feasible
 - **Live negotiation** where agents need back-and-forth dialogue to reach a decision
 
-But these feel like edge cases to me. For the vast majority of knowledge work -- accumulating context and sharing this as institutional memory, surviving team turnover -- A2B is way simpler. It is also more resilient and scales better.
+But these feel like edge cases to me. For the vast majority of knowledge work -- accumulating context and sharing this as institutional memory, surviving team turnover -- A2D is way simpler. It is also more resilient and scales better.
 
 ---
 
