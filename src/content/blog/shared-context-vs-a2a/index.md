@@ -88,7 +88,7 @@ Let's take a step back and look at what these projects are either building or pl
 
 All of this exists to solve one problem: sharing context between agents. Agent A knows something, and agent B needs it. So these tools are building infrastructure to connect these. But with these tools, add more agents means more complexity that each agent must navigate. Each agent must know about all other agents, determine the level of trust, know how to communicate with them, learn about their capabilities, etc. This is additional context unrelated to the actual project you are working on, or the original problem you are trying to solve. These tools can do a good job at hiding this complexity, but your agents must interact with these complicated layers each time during communication and the other agent must be active.
 
-## A means to an end
+## Repeating mistakes from the past
 
 Why does any agent need to know everything about every other agent you, or your organization, are using? Each of us may have a handful of agents, so the problem may not get too unwieldly as long as we are always focused on use case 1. But increasingly we want to interact with agents from other people, all working on shared projects. In that case it can get complicated to connect all agents together directly.
 
