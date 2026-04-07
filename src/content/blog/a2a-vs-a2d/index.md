@@ -1,5 +1,5 @@
 ---
-title: "Agent-to-Database vs Agent-to-Agent Communication"
+title: "Agent-to-Agent vs Agent-to-Database Communication"
 description: "Why agent-to-database is a better approach than agent-to-agent communication for multi-agent AI systems"
 date: "Apr 06 2026"
 ---
